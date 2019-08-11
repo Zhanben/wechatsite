@@ -1,27 +1,27 @@
 import os
-from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.flaskenv'))
 
 
 class Config(object):
+    APP_ID = "wx37ee59c948764806"
+    APP_SECRET = "ed7a0dd00407208f2f596097cc4a73e3"
+    APP_TOKEN = "487529QWE"
     SECRET_KEY = '!@#$%12345'
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hillstone!1@192.168.226.128/flask'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:hillstone!1@192.168.226.128/flask'
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:hillstone!1@192.168.226.128/flask'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
 
 
-config = {
+config_dict = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
     'default': DevelopmentConfig
