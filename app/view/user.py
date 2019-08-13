@@ -2,65 +2,66 @@ import logging
 import json
 import random
 from faker import Faker
-from flask_restful import Resource, reqparse, fields
+from flask_restful import Resource
 from flask import request, jsonify
 from ..models import db
 from ..models.user import User
 from ..models.article import Article
+from .base import BaseResponse
 
 
 class UserHandler(Resource):
     @staticmethod
     def get(user_id=0):
-        res = {
-            "Action": "GetOneUser",
-            "Message": "get user success",
-            "RetCode": 0,
-            "Data": dict()
-        }
+        res = BaseResponse(
+            data=dict(),
+            action="GetOneUser",
+            message="get user success",
+            ret_code=0,
+        )
         try:
             user = User.query.filter_by(id=user_id).one()
             logging.info("get user list:%s" % user.to_dict())
-            res["Data"] = user.to_dict()
+            res.data = user.to_dict()
         except Exception as e:
             logging.error("get one user error:%s" % e)
-            res["Message"] = "user id not exist"
-            res["RetCode"] = -1
-        return jsonify(res)
+            res.message = "user id not exist"
+            res.ret_code = -1
+        return jsonify(res.to_dict())
 
     def post(self):
-        res = {
-            "Action": "AddOneUser",
-            "Message": "add user success",
-            "RetCode": 0,
-            "Data": dict()
-        }
+        res = BaseResponse(
+            data=dict(),
+            action="AddOneUser",
+            message="add user success",
+            ret_code=0,
+        )
         data = request.get_data()
         json_data = json.dumps(data.decode('utf-8'))
         admin = User(json_data["username"], json_data["email"])
-        res["Data"] = admin.to_dict()
+        res.data = admin.to_dict()
         db.session.add(admin)
         db.session.commit()
-        return jsonify(res)
+        return jsonify(res.to_dict())
 
 
 class UsersHandler(Resource):
     @staticmethod
     def get():
-        res = {
-            "Action": "GetAllUser",
-            "Message": "get all user success",
-            "RetCode": 0,
-            "Data": dict()
-        }
+        res = BaseResponse(
+            data=dict(),
+            action="GetAllUser",
+            message="get all user success",
+            ret_code=0,
+        )
         # logging.info("get users query string:%s" % request.query_string)
         # print('page=', request.args['page'])
         # print('limit=', request.args['limit'])
         user_list = User.query.all()
         user_dict_list = [i.to_dict() for i in user_list]
         logging.info("get user list:%s" % user_dict_list)
-        res["Data"] = user_dict_list
-        return jsonify(res)
+        res.data = user_dict_list
+        return jsonify(res.to_dict())
 
 
 class FakeDataHandler(Resource):

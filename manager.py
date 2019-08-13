@@ -9,7 +9,7 @@ manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                        format="%(asctime)s[%(name)s][%(levelname)s] :%(levelno)s: %(message)s",
                         datefmt='%a, %d %b %Y %H:%M:%S',
                         filename='logs/weChatService.log',
                         filemode='a')
